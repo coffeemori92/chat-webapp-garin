@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Signup from '../components/Signup';
-import { LOG_IN_REQUEST } from '../store/constants/user';
+import { LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
 import { LoginLayout, LoginForm, Logo } from '../styles/LoginStyle';
+import { googleProvider, githubProvider } from '../util/firebase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -49,7 +50,16 @@ const Login = () => {
   const onClickSignup = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setShowSignup(true);
   }, []);
-  
+  const onSocialClick = useCallback((e) => {
+    const name = e.target.name;
+    let provider;
+    if(name === 'google') provider = googleProvider;
+    if(name === 'github') provider = githubProvider;
+    return dispatch({
+      type: SOCIAL_LOG_IN_REQUEST,
+      data: provider,
+    });
+  }, []);
   return (
     <>
       <LoginLayout>
@@ -76,8 +86,8 @@ const Login = () => {
         />
         <button>ログイン</button>
       </LoginForm>
-      <button>Googleアカウントで始める</button>
-      <button>Githubアカウントで始める</button>
+      <button name="google" onClick={onSocialClick}>Googleアカウントで始める</button>
+      <button name="github" onClick={onSocialClick}>Githubアカウントで始める</button>
       <button onClick={onClickSignup}>新規登録</button>
       </LoginLayout>
       <Signup visible={showSignup} cancelHandler={handleShowSignup} />

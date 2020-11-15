@@ -2,22 +2,9 @@ import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import { DarkBackground, SignupForm, SignupLayout, Label, ErrorMsg } from '../styles/SignupStyle';
+import { DarkBackground, SignupForm, SignupLayout, Label, ErrorMsg, StyledCloseIcon } from '../styles/SignupStyle';
 import { SIGN_UP_REQUEST } from '../store/constants/user';
 import { myFirebaseApp}  from '../util/firebase';
-
-import CloseIcon from '@material-ui/icons/Close';
-import styled from 'styled-components';
-
-const StyledCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 3%;
-  right: 3%;
-  z-index: 1;
-  &:hover {
-    cursor: pointer;
-  }
-`;
 
 interface Signup {
   visible: boolean;
@@ -74,7 +61,6 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
       alert('パスワードを確認してください。');
       return setPasswordError(true);
     }
-    console.log(email, nickname, password, passwordCheck);
     return dispatch({
       type: SIGN_UP_REQUEST,
       data: {

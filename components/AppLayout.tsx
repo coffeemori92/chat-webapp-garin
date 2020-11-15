@@ -1,10 +1,15 @@
 import React from 'react';
 
-// #ECECED
+import { AppLayoutFlexbox } from '../styles/AppLayoutStyle';
+import SideMenu from './SideMenu';
 
-const AppLayout = () => {
+const AppLayout = ({ children }) => {
   return (
     <>
+      <AppLayoutFlexbox>
+        <SideMenu/>
+        { children }
+      </AppLayoutFlexbox>
     </>
   );
 };

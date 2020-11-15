@@ -2,7 +2,7 @@ import { produce } from 'immer';
 
 import initState from '../initState/user';
 import { Action } from './interfaces';
-import { LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS } from '../constants/user';
+import { LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../constants/user';
 
 const reducer = (state = initState, action: Action) => produce(state, draft => {
   switch(action.type) {
@@ -22,16 +22,19 @@ const reducer = (state = initState, action: Action) => produce(state, draft => {
       draft.signupError = action.error;
       break;
     case LOG_IN_REQUEST:
+    case SOCIAL_LOG_IN_REQUEST:
       draft.loginLoading = true;
       draft.loginDone = false;
       draft.loginError = null;
       break;
     case LOG_IN_SUCCESS:
+    case SOCIAL_LOG_IN_SUCCESS:
       draft.loginLoading = false;
       draft.loginDone = true;
       // draft.me = action.data;
       break;
     case LOG_IN_FAILURE:
+    case SOCIAL_LOG_IN_FAILURE:
       draft.loginLoading = false;
       draft.loginDone = false;
       draft.loginError = action.error;

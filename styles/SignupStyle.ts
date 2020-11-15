@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import CloseIcon from '@material-ui/icons/Close';
 
 export const DarkBackground = styled.div`
   position: fixed;
@@ -61,4 +62,24 @@ export const ErrorMsg = styled.div`
   left: 14%;
   bottom: 28%;
   font-size: 12px;
+`;
+
+export const closeIconRotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+`;
+
+export const StyledCloseIcon = styled(CloseIcon)`
+  position: absolute;
+  top: 3%;
+  right: 3%;
+  z-index: 1;
+  &:hover {
+    animation: ${closeIconRotate} 0.5s;
+    cursor: pointer;
+  }
 `;

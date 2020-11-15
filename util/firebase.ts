@@ -18,9 +18,10 @@ const firebaseConfig = {
 if (firebase.apps.length === 0) {
   var myFirebaseApp = firebase.initializeApp(firebaseConfig);
   var reduxSagaFirebase = new ReduxSagaFirebase(myFirebaseApp);
+  var googleProvider = new firebase.auth.GoogleAuthProvider();
+  var githubProvider = new firebase.auth.GithubAuthProvider();
+  var dbService = firebase.firestore();
 }
 
-export { myFirebaseApp, reduxSagaFirebase };
-
-
+export { myFirebaseApp, reduxSagaFirebase, googleProvider, githubProvider, dbService };
 
