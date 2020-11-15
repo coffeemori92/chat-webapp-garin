@@ -1,0 +1,8 @@
+export interface Action {
+  type: string;
+  error: any;
+  data?: {
+    email: string,
+    password: string,
+  }
+}

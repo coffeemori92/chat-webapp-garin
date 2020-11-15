@@ -1,11 +1,88 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-const HOME = () => {
+import Signup from '../components/Signup';
+import { LOG_IN_REQUEST } from '../store/constants/user';
+import { LoginLayout, LoginForm, Logo } from '../styles/LoginStyle';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showSignup, setShowSignup] = useState(false);
+  const inputEl = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(inputEl.current) {
+      inputEl.current.focus();
+    }
+  }, []);
+
+  const handleShowSignup = useCallback((cancel) => {
+    if(cancel) {
+      setShowSignup(false);
+    }
+    if(inputEl.current) {
+      inputEl.current.focus();
+    }
+  }, []);
+
+  const onSubmitForm = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    return dispatch({
+      type: LOG_IN_REQUEST,
+      data: {
+        email,
+        password
+      }
+    });
+  }, [email, password]);
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if(name === 'email') setEmail(value);
+    if(name === 'password') setPassword(value);
+  }, []);
+
+  const onClickSignup = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setShowSignup(true);
+  }, []);
+  
   return (
     <>
-    hi
+      <LoginLayout>
+      <Logo>
+        <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+      </Logo>
+      <LoginForm onSubmit={onSubmitForm}>
+        <input
+          name="email"
+          type="email"
+          placeholder="メール"
+          value={email}
+          onChange={onChange}
+          ref={inputEl}
+          required
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={onChange}
+          required
+        />
+        <button>ログイン</button>
+      </LoginForm>
+      <button>Googleアカウントで始める</button>
+      <button>Githubアカウントで始める</button>
+      <button onClick={onClickSignup}>新規登録</button>
+      </LoginLayout>
+      <Signup visible={showSignup} cancelHandler={handleShowSignup} />
     </>
   );
 };
 
-export default HOME;
+export default Login;
