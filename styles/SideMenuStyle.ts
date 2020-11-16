@@ -16,6 +16,10 @@ export const MenuBar = styled.ul`
     &:nth-child(3) {
       position: absolute;
       bottom: 5%;
+      transition: transform 1s ease;
+      &:hover {
+        transform: rotate(90deg);
+      }
     }
     svg {
       font-size: 40px;

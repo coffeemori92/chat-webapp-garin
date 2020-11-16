@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import Signup from '../components/Signup';
 import { LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
@@ -11,7 +12,9 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showSignup, setShowSignup] = useState(false);
   const inputEl = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
+  const { me } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,6 +22,12 @@ const Login = () => {
       inputEl.current.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if(me) {
+      router.replace('/home');
+    }
+  }, [me]);
 
   const handleShowSignup = useCallback((cancel) => {
     if(cancel) {
@@ -50,6 +59,7 @@ const Login = () => {
   const onClickSignup = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setShowSignup(true);
   }, []);
+  
   const onSocialClick = useCallback((e) => {
     const name = e.target.name;
     let provider;

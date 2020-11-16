@@ -1,4 +1,5 @@
 import React from 'react';
+import wrapper from '../store/cofigureStore';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 
@@ -36,5 +37,10 @@ const Home = () => {
     </>
   )
 };
+
+export const getServerSiceProps = wrapper.getServerSideProps(async (context) => {
+  console.log('serverSideProps home start');
+  console.log('context', context);
+});
 
 export default Home;

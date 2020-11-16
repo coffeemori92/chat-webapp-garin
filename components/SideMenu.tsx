@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import HomeIcon from '@material-ui/icons/Home';
 import ModeCommentOutlinedIcon from '@material-ui/icons/ModeCommentOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 
 import { MenuBar } from '../styles/SideMenuStyle';
+import SettingMenu from './SettingMenu';
 
 const SideMenu = () => {
+  const [showSetting, setShowSetting] = useState(false);
+
+  const onClick = useCallback((e) => {
+    if(e.target.id === 'setting') setShowSetting(prev => !prev);
+  }, []);
   return (
     <>
       <MenuBar>
@@ -21,9 +27,18 @@ const SideMenu = () => {
           </Link>
         </li>
         <li>
-          <SettingsOutlinedIcon/>
+          <SettingsOutlinedIcon 
+            id="setting"
+            onClick={onClick}
+          />
         </li>
+        
       </MenuBar>
+      {
+        showSetting 
+        ? <SettingMenu/>
+        : null
+      }
     </>
   );
 };
