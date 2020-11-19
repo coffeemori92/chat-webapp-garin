@@ -13,12 +13,19 @@ const initState = {
   loginLoading: false,
   loginDone: false,
   loginError: null,
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
   logoutLoading: false,
   logoutDone: false,
   logoutError: null,
   signupLoading: false,
   signupDone: false,
   signupError: null,
+  addFriendLoading: false,
+  addFriendDone: false,
+  addFriendError: null,
+  addedNewFriend: false,
 };
 
 export default initState;

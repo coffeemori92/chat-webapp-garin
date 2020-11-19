@@ -15,8 +15,10 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
-  input {
+  input,
+  button {
     outline: 0px;
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
   input::placeholder,
   textarea::placeholder {

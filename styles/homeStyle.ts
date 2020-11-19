@@ -66,8 +66,8 @@ export const MyInfoAreaMain = styled.div`
   width: 100%;
   img {
     margin-right: 5px;
-    width: 100px;
-    height: 100px;
+    width: 85px;
+    height: 85px;
   }
   div {
     display: flex;
@@ -78,4 +78,51 @@ export const MyInfoAreaMain = styled.div`
 
 export const LayoutDiv = styled.div`
   margin-right: 135px;
+`;
+
+export const FriendsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 245px;
+  width: 100%;
+`;
+
+export const FriendArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-left: 15px;
+  margin-bottom: 5px;
+`;
+
+export const FriendMainArea = styled.div`
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  padding: 5px;
+  &:hover {
+    background-color: #ECECED;
+  }
+  img {
+    margin-left: 21px;
+    margin-right: 5px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+  }
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+`;
+
+export const FriendLayoutDiv = styled.div`
+  width: 35px;
+`;
+
+export const FriendsNumArea = styled.div`
+  margin-left: 30px;
+  margin-bottom: 8px;
+  color: gray;
+  font-size: 14px;
 `;

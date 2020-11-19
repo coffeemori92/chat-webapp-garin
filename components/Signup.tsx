@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import { DarkBackground, SignupForm, SignupLayout, Label, ErrorMsg, StyledCloseIcon } from '../styles/SignupStyle';
@@ -23,6 +23,8 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
+  const [isSignedUp, setIsSignedup] = useState(false);
+  const { signupDone } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,12 +34,14 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   }, []);
 
   useEffect(() => {
-    myFirebaseApp.auth().onAuthStateChanged(user => {
-      if(user) {
-        router.replace('/home');
-      }
-    });
-  }, []);
+    if(signupDone) setIsSignedup(true);
+    if(isSignedUp) {
+      myFirebaseApp.auth().onAuthStateChanged(user => {
+        if(user) router.replace('/home');
+      });
+    }
+    return () => setIsSignedup(false);
+  }, [signupDone, isSignedUp]);
 
   const onClick = useCallback((e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     cancelHandler(true);
@@ -57,11 +61,12 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
 
   const onSubmitForm = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(nickname);
     if(password !== passwordCheck) {
       alert('パスワードを確認してください。');
       return setPasswordError(true);
     }
-    return dispatch({
+    dispatch({
       type: SIGN_UP_REQUEST,
       data: {
         email,

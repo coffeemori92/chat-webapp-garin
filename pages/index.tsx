@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import Signup from '../components/Signup';
-import { LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
+import { LOAD_MY_INFO_REQUEST, LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
 import { LoginLayout, LoginForm, Logo } from '../styles/LoginStyle';
-import { googleProvider, githubProvider } from '../util/firebase';
+import { googleProvider, githubProvider, myFirebaseApp } from '../util/firebase';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ const Login = () => {
   const inputEl = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const { me } = useSelector(state => state.user);
+  const { loginDone } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,10 +24,15 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if(me) {
-      router.replace('/home');
+    if(loginDone) {
+      myFirebaseApp.auth().onAuthStateChanged(user => {
+        if(user) {
+          dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email } });
+          router.replace('/home');
+        } 
+      });
     }
-  }, [me]);
+  }, [loginDone]);
 
   const handleShowSignup = useCallback((cancel) => {
     if(cancel) {

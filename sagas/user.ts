@@ -1,12 +1,14 @@
 import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
 
-import { LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../store/constants/user';
+import { ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../store/constants/user';
 import { Action } from '../store/reducers/interfaces';
-import { signupAPI, socialLoginAPI, loginAPI, logoutAPI } from './api/user';
+import { signupAPI, loadMyInfoAPI, socialLoginAPI, loginAPI, logoutAPI, registerNicknameAPI, registerUserAPI, addFriendAPI, searchFriendAPI } from './api/user';
 
 function* signup(action: Action) {
   try {
     yield call(signupAPI, action.data);
+    yield call(registerNicknameAPI, action.data);
+    yield call(registerUserAPI, action.data);
     yield put({ type: SIGN_UP_SUCCESS });
   } catch(error) {
     console.error(error);
@@ -29,14 +31,27 @@ function* login(action: Action) {
   try {
     const result = yield call(loginAPI, action.data);
     console.log(result);
-    yield put({
-      type: LOG_IN_SUCCESS,
-      data: result.user
-    });
+    yield put({ type: LOG_IN_SUCCESS });
   } catch(error) {
     console.error(error);
     yield put({
       type: LOG_IN_FAILURE,
+      error: error.message
+    });
+  }
+}
+
+function* loadMyInfo(action: Action) {
+  try {
+    const result = yield call(loadMyInfoAPI, action.data);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result
+    });
+  } catch(error) {
+    console.error(error);
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
       error: error.message
     });
   }
@@ -57,6 +72,26 @@ function* logout() {
   }
 }
 
+function* addFriend(action: Action) {
+  try {
+    const result = yield call(searchFriendAPI, action.data);
+    if(!result) {
+      return yield put({
+        type: ADD_FRIEND_FAILURE,
+        error: true,
+      });
+    }
+    yield call(addFriendAPI, result);
+    yield put({ type: ADD_FRIEND_SUCCESS, });
+  } catch(error) {
+    console.error(error);
+    yield put({
+      type: ADD_FRIEND_FAILURE,
+      error: error.message
+    });
+  }
+}
+
 function* watchSignup() {
   yield takeLatest(SIGN_UP_REQUEST, signup);
 }
@@ -69,8 +104,16 @@ function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, login);
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchLogout() {
   yield takeLatest(LOG_OUT_REQUEST, logout);
+}
+
+function* watchAddFriend() {
+  yield takeLatest(ADD_FRIEND_REQUEST, addFriend);
 }
 
 export default function* userSaga() {
@@ -78,6 +121,8 @@ export default function* userSaga() {
     fork(watchSignup),
     fork(watchSocialLogin),
     fork(watchLogin),
+    fork(watchLoadMyInfo),
     fork(watchLogout),
+    fork(watchAddFriend),
   ]);
 }

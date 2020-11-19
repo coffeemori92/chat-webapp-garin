@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import ReduxSagaFirebase from 'redux-saga-firebase';
 
+import '@firebase/firestore'
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -21,7 +22,6 @@ if (firebase.apps.length === 0) {
   var googleProvider = new firebase.auth.GoogleAuthProvider();
   var githubProvider = new firebase.auth.GithubAuthProvider();
   var dbService = firebase.firestore();
-  firebase.auth.Auth.Persistence.SESSION;
 }
 
 export { myFirebaseApp, reduxSagaFirebase, googleProvider, githubProvider, dbService };
