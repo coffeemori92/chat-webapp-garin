@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from 'styled-components';
 
 export const ChatRoomContainer = styled.div`
@@ -23,14 +21,16 @@ export const Header = styled.div`
 `;
 
 export const ChatArea = styled.div`
-
+  padding-top: 90px;
+  padding-bottom: 150px;
+  background-color: #B2C7DA;
 `;
 
 export const TypingArea = styled.div`
   position: fixed;
   background-color: white;
   width: 100%;
-  height: 150px;
+  height: 145px;
   bottom: 0;
   form {
     height: 100%;
@@ -42,6 +42,7 @@ export const TypingArea = styled.div`
       border: none;
       outline: none;
       font-size: 15px;
+      padding: 12px;
     }
   }
 `;
@@ -60,26 +61,42 @@ export const ButtonArea = styled.div`
     }
 `;
 
-const ChatRoom = () => {
-  return (
-    <ChatRoomContainer>
-      <Header>
-        <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694"/>
-        <div>아이디</div>
-      </Header>
-      <ChatArea>
+export const ChatParagraph = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  margin-left: 7px;
+  margin-right: ${props => props.myChat ? '7px' : ''};
+`;
 
-      </ChatArea>
-      <TypingArea>
-        <form>
-          <textarea />
-          <ButtonArea>
-            <button>送信</button>
-          </ButtonArea>
-        </form>
-      </TypingArea>
-    </ChatRoomContainer>
-  );
-};
+export const ChatParagraphMainArea = styled.div`
+  display: flex;
+  flex-flow: ${props => props.myChat ? 'row-reverse' : ''};
+  width: 100%;
+  padding: 5px;
+  img {
+    margin-right: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+`;
 
-export default ChatRoom;
+export const ChatBubble = styled.div`
+  background-color: white;
+  margin-top: 2px;
+  border-radius: 7px;
+  padding: 10px;
+`;
+
+export const Label = styled.div`
+  padding: 3px;
+`;
+
+export const TimeStampDiv = styled.div`
+  min-width: 70px;
+  display: flex;
+  align-items: flex-end;
+  padding: 5px;
+  font-size: 14px;
+`;

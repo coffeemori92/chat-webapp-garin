@@ -9,7 +9,7 @@ import AddFriend from '../components/AddFriend';
 import { FriendArea, FriendLayoutDiv, FriendMainArea, FriendsContainer, FriendsNumArea, Header, LayoutDiv, MyinfoArea, MyInfoAreaMain, SearchBar } from '../styles/homeStyle';
 import { dbService, myFirebaseApp } from '../util/firebase';
 import { LOAD_MY_INFO_REQUEST } from '../store/constants/user';
-import { LOAD_CHATROOM_REQUEST } from '../store/constants/chat';
+import { LOAD_CHATROOM_REQUEST, SEARCH_CHATROOM_REQUEST } from '../store/constants/chat';
 
 const Home = () => {
   const [showAddFriend, setShowAddFriend] = useState(false);
@@ -18,7 +18,8 @@ const Home = () => {
 
   const router = useRouter();
 
-  const { me, loadMyInfoDone, addFriendDone, addedNewFriend } = useSelector((state: any) => state.user);
+  const { me, addedNewFriend } = useSelector((state: any) => state.user);
+  const { searchChatRoomDone, chatRoomId } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,6 +31,15 @@ const Home = () => {
       });
     }
   }, [me]);
+
+  useEffect(() => {
+    if(searchChatRoomDone) {
+      router.push({
+        pathname: '/chatroom/[id]',
+        query: { id: chatRoomId },
+      });
+    }
+  }, [searchChatRoomDone]);
 
   useEffect(() => {
     if(addedNewFriend) {
@@ -55,8 +65,9 @@ const Home = () => {
   }, []);
 
   const onDoubleClick = useCallback((e) => {
+    console.log('page', e.target.id);
     const email = e.target.id;
-    dispatch({ type: LOAD_CHATROOM_REQUEST, data: email})
+    dispatch({ type: SEARCH_CHATROOM_REQUEST, data: { email: email }})
   }, []);
 
   const onClicked = useCallback((e) => {
