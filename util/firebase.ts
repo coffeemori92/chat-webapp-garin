@@ -24,5 +24,5 @@ if (firebase.apps.length === 0) {
   var dbService = firebase.firestore();
 }
 
-export { myFirebaseApp, reduxSagaFirebase, googleProvider, githubProvider, dbService };
+export { firebase, myFirebaseApp, reduxSagaFirebase, googleProvider, githubProvider, dbService };
 

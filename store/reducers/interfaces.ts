@@ -5,5 +5,6 @@ export interface Action {
     email?: string,
     password?: string,
     nickname?: string,
+    chatRoomId?: string,
   }
 }

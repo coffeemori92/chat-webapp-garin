@@ -1,32 +1,23 @@
 const initState = {
   chatRoomId: null,
+  talkWith: null,
   talks: [],
+  recentChatRoomsInfo: [],
   searchChatRoomLoading: false,
   searchChatRoomDone: false,
   searchChatRoomError: null,
+  searchChatsLoading: false,
+  searchChatsDone: false,
+  searchChatsError: null,
   loadChatRoomLoading: false,
   loadChatRoomDone: false,
   loadChatRoomError: null,
+  loadChatRoomsLoading: false,
+  loadChatRoomsDone: false,
+  loadChatRoomsError: null,
+  sendMessageLoading: false,
+  sendMessageDone: false,
+  sendMessageError: null,
 };
 
 export default initState;
-
-/*
-chatrooms/고유아이디/
-users : [aaa@aaa.com, bbb@bbb.com,]
-
-chats/chatrooms의 고유 아이디/
-talks: [
-  {
-    user: 'aaa@aaa.com',
-    content: '',
-    timestamp: '',
-  },
-  {
-    user: 'bbb@bbb.com',
-    content: '',
-    timestamp: '',
-  }
-]
-
-**/

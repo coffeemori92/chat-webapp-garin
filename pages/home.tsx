@@ -9,10 +9,12 @@ import AddFriend from '../components/AddFriend';
 import { FriendArea, FriendLayoutDiv, FriendMainArea, FriendsContainer, FriendsNumArea, Header, LayoutDiv, MyinfoArea, MyInfoAreaMain, SearchBar } from '../styles/homeStyle';
 import { dbService, myFirebaseApp } from '../util/firebase';
 import { LOAD_MY_INFO_REQUEST } from '../store/constants/user';
-import { LOAD_CHATROOM_REQUEST, SEARCH_CHATROOM_REQUEST } from '../store/constants/chat';
+import { SEARCH_CHATROOM_REQUEST } from '../store/constants/chat';
 
 const Home = () => {
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [searchNickname, setSearchNickname] = useState('');
+  const [searched, setSearched] = useState(false);
   const [myFriendsInfo, setmyFriendsInfo] = useState(null);
   const friendAreaEl = useRef(null);
 
@@ -64,6 +66,14 @@ const Home = () => {
     setShowAddFriend(true);
   }, []);
 
+  const onChange = useCallback((e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    if(name === 'searchNickname') {
+      setSearchNickname(value);
+    }
+  }, []);
+
   const onDoubleClick = useCallback((e) => {
     console.log('page', e.target.id);
     const email = e.target.id;
@@ -96,7 +106,10 @@ const Home = () => {
           <div>
             <SearchOutlinedIcon/>
             <input
+              name="searchNickname"
+              onChange={onChange}
               placeholder="なまえ検索"
+              value={searchNickname}
             />
           </div>
           <div></div>
@@ -116,7 +129,17 @@ const Home = () => {
           <LayoutDiv/>
         </MyinfoArea>
         <FriendsContainer>
-          <FriendsNumArea>友達 210</FriendsNumArea>
+          <FriendsNumArea>友達 {
+                me &&
+                myFriendsInfo === null &&
+                me.friends.length
+              }
+              {
+                me &&
+                myFriendsInfo &&
+                myFriendsInfo.length
+              }
+          </FriendsNumArea>
           {
             me &&
             myFriendsInfo === null &&

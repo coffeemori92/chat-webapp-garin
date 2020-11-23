@@ -1,20 +1,35 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID, LOAD_CHATROOM_REQUEST, SEND_MESSAGE_REQUEST } from '../../store/constants/chat';
+import { INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID, INIT_SEARCH_CHATS_EXCEPT_CHATROOM_ID, LOAD_CHATROOM_REQUEST, SEND_MESSAGE_REQUEST } from '../../store/constants/chat';
 import { ButtonArea, ChatArea, ChatBubble, ChatParagraph, ChatParagraphMainArea, ChatRoomContainer, Header, Label, TimeStampDiv, TypingArea } from '../../styles/ChatRoomStyle';
 import { LOAD_MY_INFO_REQUEST } from '../../store/constants/user';
-import { myFirebaseApp } from '../../util/firebase';
+import { dbService, myFirebaseApp } from '../../util/firebase';
 
 const ChatRoom = () => {
   const [text, setText] = useState('');
+  const [friendNickname, setFriendNickname] = useState('');
+  const [newTalks, setNewTalks] = useState(null);
+  const chatBubble = useRef(null);
   const textareaEl = useRef(null);
   const formEl = useRef(null);
   const { me } = useSelector((state: any) => state.user);
-  const { searchChatRoomDone, talks } = useSelector((state: any) => state.chat);
+  const { searchChatRoomDone, talks, chatRoomId, talkWith, sendMessageDone, searchChatsDone, loadChatRoomDone } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
 
   let textarea;
+
+  useEffect(() => {
+    if(loadChatRoomDone) {
+      const a = document.body.scrollHeight;
+      console.log('a', a);
+      const b = document.body.clientHeight;
+      console.log('b', b);
+    }
+    // if(chatBubble.current) {
+    //   chatBubble.current.scrollIntoView({ behavior: 'smooth' });
+    // }
+  }, [sendMessageDone, loadChatRoomDone]);
 
   useEffect(() => {
     if(textareaEl.current) {
@@ -24,15 +39,10 @@ const ChatRoom = () => {
     if(searchChatRoomDone) {
       dispatch({ type: INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID });
     }
-  }, [searchChatRoomDone]);
-
-  useEffect(() => {
-    const browserPath = window.location.pathname;
-    const talkId = browserPath.split('/')[2];
-    if(talkId) {
-      dispatch({ type: LOAD_CHATROOM_REQUEST, data: { talkId: talkId }});
+    if(searchChatsDone) {
+      dispatch({ type: INIT_SEARCH_CHATS_EXCEPT_CHATROOM_ID });
     }
-  }, []);
+  }, [searchChatRoomDone]);
 
   useEffect(() => {
     if(!me) {
@@ -44,59 +54,81 @@ const ChatRoom = () => {
     }
   }, [me]);
 
-  const onChange = useCallback(e => {
-    const value = e.target.value;
-    setText(value);
-  }, []);
+  useEffect(() => {
+    const browserPath = window.location.pathname;
+    const talkId = browserPath.split('/')[2];
+    if(talkId && me) {
+      dispatch({ type: LOAD_CHATROOM_REQUEST, data: { talkId: talkId }});
+    }
+  }, [me]);
+
+  useEffect(() => {
+    if(talkWith) {
+      setFriendNickname(talkWith.nickname);
+    }
+  }), [talkWith];
+
+  useEffect(() => {
+    if(chatRoomId && talks) {
+      dbService.collection('chats')
+      .doc(chatRoomId)
+      .onSnapshot((snapshot) => {
+        const chats = snapshot.data();
+        const newTalks = chats.talks;
+        setNewTalks(newTalks);
+      });
+    }
+  }, [chatRoomId, talks]);
 
   const onKeyDown = useCallback((e) => {
     if(e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if(text !== '') {
-        console.log('text', text);
-        dispatch({ type: SEND_MESSAGE_REQUEST, data: { text: text }});
+        const browserPath = window.location.pathname;
+        const talkId = browserPath.split('/')[2];  
+        dispatch({ type: SEND_MESSAGE_REQUEST, data: { text, talkId, talks }});
         setText('');
       } 
     }
-  }, [text]);
+  }, [text, talks]);
+
+  const onChange = useCallback(e => {
+    const value = e.target.value;
+    setText(value);
+  }, []);
 
   const onSubmit = useCallback((e) => {
     e.preventDefault();
-    console.log('text', text);
-    dispatch({ type: SEND_MESSAGE_REQUEST, data: { text: text }});
+    const browserPath = window.location.pathname;
+    const talkId = browserPath.split('/')[2];  
+    dispatch({ type: SEND_MESSAGE_REQUEST, data: { text, talkId, talks }});
     setText('');
     if(textareaEl.current) {
       textarea = textareaEl.current;
       textarea.focus();
     }
-  }, [text]);
+  }, [text, talks]);
   
   return (
     <ChatRoomContainer>
       <Header>
         <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694"/>
-        { me &&
-          talks.map((v, i) => {
-            let userNickname = '';
-            if(me.nickname !== v.user) {
-              userNickname = v.user;
-            }
-            return (
-              <div>{userNickname}</div>
-            )
-          })
+        {
+          <div>{friendNickname}</div>
         }
       </Header>
       <ChatArea>
-        { me &&
+        { !newTalks &&
           talks.map((v, i) => {
             let myChat = false;
+            const date = new Date(v.timestamp);
+            const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
+            jDate.splice(2, 0, ' ').join('');
             if(v.user === me.nickname) {
               myChat = true;
             }
             return (
-              <>
-                <ChatParagraph key={v.timestamp.seconds} myChat={myChat}>
+                <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
                   <ChatParagraphMainArea myChat={myChat}>
                     {
                       myChat 
@@ -115,10 +147,48 @@ const ChatRoom = () => {
                         )
                       }
                     </div>
-                    <TimeStampDiv>午後 6:15</TimeStampDiv>
+                    <TimeStampDiv>
+                      { jDate }
+                    </TimeStampDiv>
                   </ChatParagraphMainArea>
                 </ChatParagraph>
-              </>
+            )
+          })
+        }
+        { newTalks &&
+          newTalks.map((v, i) => {
+            let myChat = false;
+            const date = new Date(v.timestamp);
+            const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
+            jDate.splice(2, 0, ' ').join('');
+            if(v.user === me.nickname) {
+              myChat = true;
+            }
+            return (
+                <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
+                  <ChatParagraphMainArea myChat={myChat}>
+                    {
+                      myChat 
+                      ? null
+                      : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+                    }
+                    <div>
+                      {
+                        myChat
+                        ? <ChatBubble>{v.content}</ChatBubble>
+                        : (
+                            <>
+                              <Label>{v.user}</Label>
+                              <ChatBubble>{v.content}</ChatBubble>
+                            </>
+                        )
+                      }
+                    </div>
+                    <TimeStampDiv>
+                      { jDate }
+                    </TimeStampDiv>
+                  </ChatParagraphMainArea>
+                </ChatParagraph>
             )
           })
         }
@@ -143,3 +213,82 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
+
+// {/* { me && !newTalks &&
+//           talks.map((v, i) => {
+//             let myChat = false;
+//             const date = new Date(v.timestamp);
+//             const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
+//             jDate.splice(2, 0, ' ').join('');
+//             if(v.user === me.nickname) {
+//               myChat = true;
+//             }
+//             return (
+//               <>
+//                 <ChatParagraph key={v.timestamp} myChat={myChat}>
+//                   <ChatParagraphMainArea myChat={myChat}>
+//                     {
+//                       myChat 
+//                       ? null
+//                       : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+//                     }
+//                     <div>
+//                       {
+//                         myChat
+//                         ? <ChatBubble>{v.content}</ChatBubble>
+//                         : (
+//                             <>
+//                               <Label>{v.user}</Label>
+//                               <ChatBubble>{v.content}</ChatBubble>
+//                             </>
+//                         )
+//                       }
+//                     </div>
+//                     <TimeStampDiv>{ jDate }</TimeStampDiv>
+//                   </ChatParagraphMainArea>
+//                 </ChatParagraph>
+//               </>
+//             )
+//           })
+//           }  */}
+
+// { me && newTalks &&
+//   newTalks.map((v, i) => {
+//     console.log(v);
+//     let myChat = false;
+//     const date = new Date(v.timestamp);
+//     const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
+//     jDate.splice(2, 0, ' ').join('');
+//     if(v.user === me.nickname) {
+//       myChat = true;
+//     }
+//     return (
+//       <>
+//         <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
+//           <ChatParagraphMainArea myChat={myChat}>
+//             {
+//               myChat 
+//               ? null
+//               : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+//             }
+//             <div>
+//               {
+//                 myChat
+//                 ? <ChatBubble>{v.content}</ChatBubble>
+//                 : (
+//                     <>
+//                       <Label>{v.user}</Label>
+//                       <ChatBubble>{v.content}</ChatBubble>
+//                     </>
+//                 )
+//               }
+//             </div>
+//             <TimeStampDiv>
+//               { jDate }
+//             </TimeStampDiv>
+//           </ChatParagraphMainArea>
+//         </ChatParagraph>
+//       </>
+//     )
+//   })
+// }

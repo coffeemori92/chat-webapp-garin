@@ -27,7 +27,6 @@ const Login = () => {
     if(loginDone) {
       myFirebaseApp.auth().onAuthStateChanged(user => {
         if(user) {
-          dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email } });
           router.replace('/home');
         } 
       });

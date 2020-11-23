@@ -28,8 +28,12 @@ const SideMenu = () => {
   }, []);
 
   const onClick = useCallback((e) => {
-    if(e.target.id === 'setting') setShowSetting(prev => !prev);
-  }, []);
+    if(e.target.id === 'setting' && showSetting) {
+      setShowSetting(false);
+    } if(e.target.id === 'setting' && !showSetting) {
+      setShowSetting(true);
+    }
+  }, [showSetting]);
   return (
     <>
       <MenuBar>
