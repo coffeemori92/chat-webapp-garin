@@ -7,20 +7,18 @@ import { useRouter } from 'next/router';
 import AppLayout from '../components/AppLayout';
 import AddFriend from '../components/AddFriend';
 import { FriendArea, FriendLayoutDiv, FriendMainArea, FriendsContainer, FriendsNumArea, Header, LayoutDiv, MyinfoArea, MyInfoAreaMain, SearchBar } from '../styles/homeStyle';
-import { dbService, myFirebaseApp } from '../util/firebase';
+import { myFirebaseApp } from '../util/firebase';
 import { LOAD_MY_INFO_REQUEST } from '../store/constants/user';
 import { SEARCH_CHATROOM_REQUEST } from '../store/constants/chat';
 
 const Home = () => {
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [searchNickname, setSearchNickname] = useState('');
-  const [searched, setSearched] = useState(false);
-  const [myFriendsInfo, setmyFriendsInfo] = useState(null);
   const friendAreaEl = useRef(null);
 
   const router = useRouter();
 
-  const { me, addedNewFriend } = useSelector((state: any) => state.user);
+  const { me } = useSelector((state: any) => state.user);
   const { searchChatRoomDone, chatRoomId } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
 
@@ -45,19 +43,19 @@ const Home = () => {
     }
   }, [searchChatRoomDone]);
 
-  useEffect(() => {
-    if(addedNewFriend) {
-      dbService.collection('users')
-        .doc(me.email)
-        .onSnapshot((snapshot) => {
-          const user = snapshot.data();
-          console.log('users', user);
-          const myFriendsInfo = user!.friends;
-          setmyFriendsInfo(myFriendsInfo);
-        });
-    }
-    return () => setmyFriendsInfo(null);
-  }, [addedNewFriend]);
+  // useEffect(() => {
+  //   if(addedNewFriend) {
+  //     dbService.collection('users')
+  //       .doc(me.email)
+  //       .onSnapshot((snapshot) => {
+  //         const user = snapshot.data();
+  //         console.log('users', user);
+  //         const myFriendsInfo = user!.friends;
+  //         setmyFriendsInfo(myFriendsInfo);
+  //       });
+  //   }
+  //   return () => setmyFriendsInfo(null);
+  // }, [addedNewFriend]);
   
   const handleShowSignup = useCallback((cancel) => {
     if(cancel) {
@@ -119,7 +117,10 @@ const Home = () => {
         </SearchBar>
         <MyinfoArea>
           <MyInfoAreaMain>
-            <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+            {
+              me &&
+              <img src={me.photoURL} />
+            }
             <div>
               <div>{me && me.nickname}</div>
               {
@@ -134,18 +135,11 @@ const Home = () => {
         <FriendsContainer>
           <FriendsNumArea>友達 {
                 me &&
-                myFriendsInfo === null &&
                 me.friends.length
-              }
-              {
-                me &&
-                myFriendsInfo &&
-                myFriendsInfo.length
               }
           </FriendsNumArea>
           {
-            me &&
-            myFriendsInfo === null &&
+            me && !searchNickname &&
             me.friends.map((v: any, i: string) => {
               return (
                 <FriendArea key={v.uid}>
@@ -154,7 +148,7 @@ const Home = () => {
                     ref={friendAreaEl} 
                     onDoubleClick={onDoubleClick} 
                     id={v.email}>
-                    <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+                    <img src={v.photoURL} />
                     <div>
                       <div>{v.nickname}</div>
                       { 
@@ -169,28 +163,35 @@ const Home = () => {
             })
           }
           {
-            me &&
-            myFriendsInfo &&
-            myFriendsInfo!.map((v: any) => {
-              return (
-                <FriendArea key={v.uid}>
-                  <FriendMainArea 
-                    onClick={onClicked} 
-                    ref={friendAreaEl}
-                    onDoubleClick={onDoubleClick} 
-                    id={v.email}>
-                    <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
-                    <div>
-                      <div>{v.nickname}</div>
-                      { 
-                        v.shortMsg &&
-                        <div>{v.shortMsg}</div>
-                      }
-                    </div>
-                  </FriendMainArea>
-                  <FriendLayoutDiv/>
-                </FriendArea>
-              )
+            me && searchNickname &&
+            me.friends.map((v: any, i: string) => {
+              const typedNickname = searchNickname.split('');
+              const nickname = (v.nickname).split('');
+              for(let i = 0; i < nickname.length; i++) {
+                for(let j = 0; j < typedNickname.length; j++) {
+                  if(nickname[0] === typedNickname[j]) {
+                    return (
+                      <FriendArea key={v.uid}>
+                        <FriendMainArea 
+                          onClick={onClicked} 
+                          ref={friendAreaEl} 
+                          onDoubleClick={onDoubleClick} 
+                          id={v.email}>
+                          <img src={v.photoURL} />
+                          <div>
+                            <div>{v.nickname}</div>
+                            { 
+                              v.shortMsg &&
+                              <div>{v.shortMsg}</div>
+                            }
+                          </div>
+                        </FriendMainArea>
+                        <FriendLayoutDiv/>
+                      </FriendArea>
+                    )
+                  }
+                }
+              }
             })
           }
         </FriendsContainer>

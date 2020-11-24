@@ -73,6 +73,7 @@ export const initChatsAPI = (data: any) => {
             talks: [],
           });
 };
+// TODO user 이미지 추가
 export const sendMessageAPI = (data: any) => {
   return dbService.collection('chats')
           .doc(data.talkId)

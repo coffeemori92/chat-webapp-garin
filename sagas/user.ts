@@ -2,12 +2,13 @@ import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
 
 import { ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, EDIT_PROFILE_FAILURE, EDIT_PROFILE_REQUEST, EDIT_PROFILE_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../store/constants/user';
 import { Action } from '../store/reducers/interfaces';
-import { signupAPI, loadMyInfoAPI, socialLoginAPI, loginAPI, logoutAPI, registerNicknameAPI, registerUserAPI, addFriendAPI, searchFriendAPI, editProfileAPI } from './api/user';
+import { signupAPI, loadMyInfoAPI, socialLoginAPI, loginAPI, logoutAPI, registerNicknameAPI, registerUserAPI, addFriendAPI, searchFriendAPI, editProfileAPI, registerDefaultPhotoURLAPI } from './api/user';
 
 function* signup(action: Action) {
   try {
     yield call(signupAPI, action.data);
     yield call(registerNicknameAPI, action.data);
+    yield call(registerDefaultPhotoURLAPI, action.data);
     yield call(registerUserAPI, action.data);
     yield put({ type: SIGN_UP_SUCCESS });
   } catch(error) {
@@ -81,8 +82,9 @@ function* addFriend(action: Action) {
         error: true,
       });
     }
-    yield call(addFriendAPI, result);
-    yield put({ type: ADD_FRIEND_SUCCESS, });
+    const me = yield call(addFriendAPI, result);
+    console.log('me', me);
+    yield put({ type: ADD_FRIEND_SUCCESS, data: me });
   } catch(error) {
     console.error(error);
     yield put({

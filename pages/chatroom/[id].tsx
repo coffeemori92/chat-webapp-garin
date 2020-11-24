@@ -9,7 +9,6 @@ import { dbService, myFirebaseApp } from '../../util/firebase';
 
 const ChatRoom = () => {
   const [text, setText] = useState('');
-  const [friendNickname, setFriendNickname] = useState('');
   const [newTalks, setNewTalks] = useState(null);
   const chatBubble = useRef(null);
   const textareaEl = useRef(null);
@@ -59,12 +58,6 @@ const ChatRoom = () => {
   }, [me]);
 
   useEffect(() => {
-    if(talkWith) {
-      setFriendNickname(talkWith.nickname);
-    }
-  }), [talkWith];
-
-  useEffect(() => {
     if(chatRoomId && talks) {
       dbService.collection('chats')
       .doc(chatRoomId)
@@ -108,9 +101,12 @@ const ChatRoom = () => {
   return (
     <ChatRoomContainer>
       <Header>
-        <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694"/>
-        {
-          <div>{friendNickname}</div>
+        { talkWith &&
+        <>
+          <img src={talkWith.photoURL}/>
+          <div>{talkWith.nickname}</div>
+        </>
+          
         }
       </Header>
       <ChatArea ref={chatBubble}>
@@ -129,7 +125,7 @@ const ChatRoom = () => {
                     {
                       myChat 
                       ? null
-                      : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+                      : <img src={v.photoURL} />
                     }
                     <div>
                       {
@@ -166,7 +162,7 @@ const ChatRoom = () => {
                     {
                       myChat 
                       ? null
-                      : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+                      : <img src={v.photoURL} />
                     }
                     <div>
                       {

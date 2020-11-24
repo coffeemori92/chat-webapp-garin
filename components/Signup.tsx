@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 
 import { DarkBackground, SignupForm, SignupLayout, Label, ErrorMsg, StyledCloseIcon } from '../styles/SignupStyle';
 import { SIGN_UP_REQUEST } from '../store/constants/user';
-import { myFirebaseApp}  from '../util/firebase';
 
 interface Signup {
   visible: boolean;
@@ -23,7 +22,6 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const [isSignedUp, setIsSignedup] = useState(false);
   const { signupDone } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
@@ -34,14 +32,10 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   }, []);
 
   useEffect(() => {
-    if(signupDone) setIsSignedup(true);
-    if(isSignedUp) {
-      myFirebaseApp.auth().onAuthStateChanged(user => {
-        if(user) router.replace('/home');
-      });
+    if(signupDone) {
+      router.replace('/home');
     }
-    return () => setIsSignedup(false);
-  }, [signupDone, isSignedUp]);
+  }, [signupDone]);
 
   const onClick = useCallback((e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     cancelHandler(true);

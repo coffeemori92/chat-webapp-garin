@@ -16,7 +16,7 @@ const AddFriend = ({ visible, cancelHandler }: AddFriend) => {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const inputEl = useRef<HTMLInputElement>(null);
   
-  const { addFriendError, addFriendDone } = useSelector(state => state.user);
+  const { addFriendError, addFriendDone } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {

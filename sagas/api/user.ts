@@ -1,7 +1,9 @@
 import { reduxSagaFirebase, myFirebaseApp, dbService, storageService, authService } from '../../util/firebase';
 import { v4 as uuidv4 } from 'uuid';
 
-export const signupAPI = async (data: any) => await authService.createUserWithEmailAndPassword(data.email, data.password);
+export const signupAPI = async (data: any) => {
+  await authService.createUserWithEmailAndPassword(data.email, data.password);
+}
 export const socialLoginAPI = (data: any) => reduxSagaFirebase.auth.signInWithPopup(data);
 export const loginAPI = (data: any) => reduxSagaFirebase.auth.signInWithEmailAndPassword(data.email, data.password);
 export const loadMyInfoAPI = async (data: any) => {
@@ -16,7 +18,16 @@ export const loadMyInfoAPI = async (data: any) => {
   return me;
 }
 export const logoutAPI = async () => await authService.signOut();
-export const registerNicknameAPI = (data: any) => reduxSagaFirebase.auth.updateProfile({ displayName: data.nickname });
+export const registerNicknameAPI = async (data: any) => {
+  await myFirebaseApp.auth().currentUser.updateProfile({
+    displayName: data.nickname
+  });
+}
+export const registerDefaultPhotoURLAPI = async (data: any) => {
+  await myFirebaseApp.auth().currentUser.updateProfile({
+    photoURL: 'https://firebasestorage.googleapis.com/v0/b/chat-webapp-garin.appspot.com/o/default%2F05ce44b3-6dc9-46bd-92c8-dcba68966ca6?alt=media&token=6aa9df1f-fda3-48b8-9efd-c5948ff3f3be',
+  });
+}
 export const registerUserAPI = async (data: any) => {
   await dbService.collection('users')
           .doc(data.email)
@@ -58,6 +69,13 @@ export const addFriendAPI = async (data: any) => {
                 }]
               }, { merge: true });
           });
+  let myInfo = {};
+  await dbService.collection('users')
+          .doc(myFirebaseApp.auth().currentUser?.email!)
+          .get().then(doc => {
+            myInfo = doc.data();
+          });
+  return myInfo;
 };
 export const editProfileAPI = async (data: any) => {
   const me = myFirebaseApp.auth().currentUser;

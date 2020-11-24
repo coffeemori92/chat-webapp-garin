@@ -65,7 +65,9 @@ export const MyInfoAreaMain = styled.div`
   border-bottom: 1px solid #ECECED;
   width: 100%;
   img {
+    border-radius: 50%;
     margin-right: 5px;
+    margin-bottom: 5px;
     width: 85px;
     height: 85px;
   }

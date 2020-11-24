@@ -73,6 +73,7 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
     case ADD_FRIEND_SUCCESS:
       draft.addFriendLoading = false;
       draft.addFriendDone = true;
+      draft.me = action.data;
       draft.addedNewFriend = true;
       break;
     case ADD_FRIEND_FAILURE:
