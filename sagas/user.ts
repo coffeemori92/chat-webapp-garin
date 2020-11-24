@@ -1,8 +1,8 @@
 import { all, fork, takeLatest, put, call } from 'redux-saga/effects';
 
-import { ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../store/constants/user';
+import { ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, EDIT_PROFILE_FAILURE, EDIT_PROFILE_REQUEST, EDIT_PROFILE_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../store/constants/user';
 import { Action } from '../store/reducers/interfaces';
-import { signupAPI, loadMyInfoAPI, socialLoginAPI, loginAPI, logoutAPI, registerNicknameAPI, registerUserAPI, addFriendAPI, searchFriendAPI } from './api/user';
+import { signupAPI, loadMyInfoAPI, socialLoginAPI, loginAPI, logoutAPI, registerNicknameAPI, registerUserAPI, addFriendAPI, searchFriendAPI, editProfileAPI } from './api/user';
 
 function* signup(action: Action) {
   try {
@@ -92,6 +92,23 @@ function* addFriend(action: Action) {
   }
 }
 
+function* editProfile(action: Action) {
+  try {
+    const result = yield call(editProfileAPI, action.data);
+    console.log('editProfile', result);
+    yield put({
+      type: EDIT_PROFILE_SUCCESS, 
+      data: result,
+    });
+  } catch(error) {
+    console.error(error);
+    yield put({
+      type: EDIT_PROFILE_FAILURE,
+      error: error.message
+    });
+  }
+}
+
 function* watchSignup() {
   yield takeLatest(SIGN_UP_REQUEST, signup);
 }
@@ -116,6 +133,10 @@ function* watchAddFriend() {
   yield takeLatest(ADD_FRIEND_REQUEST, addFriend);
 }
 
+function* watchEditProfile() {
+  yield takeLatest(EDIT_PROFILE_REQUEST, editProfile);
+}
+
 export default function* userSaga() {
   yield all([
     fork(watchSignup),
@@ -124,5 +145,6 @@ export default function* userSaga() {
     fork(watchLoadMyInfo),
     fork(watchLogout),
     fork(watchAddFriend),
+    fork(watchEditProfile),
   ]);
 }

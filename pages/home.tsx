@@ -25,13 +25,15 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(!me) {
-      myFirebaseApp.auth().onAuthStateChanged(user => {
-        if(user) {
+    myFirebaseApp.auth().onAuthStateChanged(user => {
+      if(user) {
+        if(!me) {
           dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email }});
         }
-      });
-    }
+      } else {
+        // 돌려보내기.
+      }
+    })
   }, [me]);
 
   useEffect(() => {
@@ -54,6 +56,7 @@ const Home = () => {
           setmyFriendsInfo(myFriendsInfo);
         });
     }
+    return () => setmyFriendsInfo(null);
   }, [addedNewFriend]);
   
   const handleShowSignup = useCallback((cancel) => {

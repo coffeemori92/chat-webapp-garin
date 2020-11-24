@@ -24,7 +24,7 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   const router = useRouter();
 
   const [isSignedUp, setIsSignedup] = useState(false);
-  const { signupDone } = useSelector(state => state.user);
+  const { signupDone } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {

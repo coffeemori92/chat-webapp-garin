@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 
 import initState from '../initState/user';
-import { ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, INIT_ADD_FRIEND_STATE, LOAD_MY_FRIENDS_INFO_FAILURE, LOAD_MY_FRIENDS_INFO_REQUEST, LOAD_MY_FRIENDS_INFO_SUCCESS, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS } from '../constants/user';
+import { EDIT_PROFILE_REQUEST ,ADD_FRIEND_FAILURE, ADD_FRIEND_REQUEST, ADD_FRIEND_SUCCESS, INIT_ADD_FRIEND_STATE, LOAD_MY_INFO_FAILURE, LOAD_MY_INFO_REQUEST, LOAD_MY_INFO_SUCCESS, LOG_IN_FAILURE, LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_OUT_FAILURE, LOG_OUT_REQUEST, LOG_OUT_SUCCESS, SIGN_UP_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SOCIAL_LOG_IN_FAILURE, SOCIAL_LOG_IN_REQUEST, SOCIAL_LOG_IN_SUCCESS, EDIT_PROFILE_SUCCESS, EDIT_PROFILE_FAILURE } from '../constants/user';
 
 const reducer = (state = initState, action: any) => produce(state, draft => {
   switch(action.type) {
@@ -79,6 +79,21 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
       draft.addFriendLoading = false;
       draft.addFriendDone = false;
       draft.addFriendError = action.error;
+      break;
+    case EDIT_PROFILE_REQUEST:
+      draft.editProfileLoading = true;
+      draft.editProfileError = null;
+      draft.editProfileDone = false;
+      break;
+    case EDIT_PROFILE_SUCCESS:
+      draft.editProfileLoading = false;
+      draft.editProfileDone = true;
+      draft.me = action.data;
+      break;
+    case EDIT_PROFILE_FAILURE:
+      draft.editProfileLoading = false;
+      draft.editProfileDone = false;
+      draft.editProfileError = action.error;
       break;
     case INIT_ADD_FRIEND_STATE:
       draft.addFriendLoading = false;

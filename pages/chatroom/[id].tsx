@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as Scroll from 'react-scroll';
 
 import { INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID, INIT_SEARCH_CHATS_EXCEPT_CHATROOM_ID, LOAD_CHATROOM_REQUEST, SEND_MESSAGE_REQUEST } from '../../store/constants/chat';
 import { ButtonArea, ChatArea, ChatBubble, ChatParagraph, ChatParagraphMainArea, ChatRoomContainer, Header, Label, TimeStampDiv, TypingArea } from '../../styles/ChatRoomStyle';
@@ -20,16 +21,11 @@ const ChatRoom = () => {
   let textarea;
 
   useEffect(() => {
-    if(loadChatRoomDone) {
-      const a = document.body.scrollHeight;
-      console.log('a', a);
-      const b = document.body.clientHeight;
-      console.log('b', b);
+    if(loadChatRoomDone || sendMessageDone) {
+      const scroll = Scroll.animateScroll;
+      scroll.scrollToBottom();
     }
-    // if(chatBubble.current) {
-    //   chatBubble.current.scrollIntoView({ behavior: 'smooth' });
-    // }
-  }, [sendMessageDone, loadChatRoomDone]);
+  }, [loadChatRoomDone, sendMessageDone]);
 
   useEffect(() => {
     if(textareaEl.current) {
@@ -117,7 +113,7 @@ const ChatRoom = () => {
           <div>{friendNickname}</div>
         }
       </Header>
-      <ChatArea>
+      <ChatArea ref={chatBubble}>
         { !newTalks &&
           talks.map((v, i) => {
             let myChat = false;
@@ -128,7 +124,7 @@ const ChatRoom = () => {
               myChat = true;
             }
             return (
-                <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
+                <ChatParagraph key={v.timestamp} myChat={myChat}>
                   <ChatParagraphMainArea myChat={myChat}>
                     {
                       myChat 
@@ -165,7 +161,7 @@ const ChatRoom = () => {
               myChat = true;
             }
             return (
-                <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
+                <ChatParagraph key={v.timestamp} myChat={myChat}>
                   <ChatParagraphMainArea myChat={myChat}>
                     {
                       myChat 

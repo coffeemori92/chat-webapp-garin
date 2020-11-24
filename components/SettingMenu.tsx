@@ -7,7 +7,11 @@ import { SettingBar } from '../styles/SettingMenuStyle';
 import { myFirebaseApp } from '../util/firebase';
 import Profile from './Profile';
 
-const SettingMenu = () => {
+interface SettingMenu {
+  cancelHandler(cancel: boolean): void;
+};
+
+const SettingMenu = ({ cancelHandler }: SettingMenu) => {
   const [onLogout, setOnLogout] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const dispatch = useDispatch();
@@ -21,9 +25,10 @@ const SettingMenu = () => {
     }
   }, [onLogout]);
 
-  const handleShowSignup = useCallback((cancel) => {
+  const handleShowProfile = useCallback((cancel) => {
     if(cancel) {
       setShowProfile(false);
+      cancelHandler(true);
     }
   }, []);
 
@@ -48,7 +53,7 @@ const SettingMenu = () => {
         <li><a id="logout" onClick={onClick}>ログアウト</a></li>
         <li><a id="exit" onClick={onClick}>終了</a></li>
       </SettingBar>
-      <Profile visible={showProfile} cancelHandler={handleShowSignup} />
+      <Profile visible={showProfile} cancelHandler={handleShowProfile} />
     </>
   );
 };

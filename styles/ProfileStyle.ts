@@ -1,7 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 
-export const SignupLayout = styled.div`
+export const ProfileLayout = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
@@ -20,7 +20,7 @@ export const Label = styled.h1`
   font-weight: 500;
 `;
 
-export const SignupForm = styled.form`
+export const ProfileForm = styled.form`
   position: relative;
   display: flex;
   justify-content: center;

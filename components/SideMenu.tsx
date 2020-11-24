@@ -34,6 +34,13 @@ const SideMenu = () => {
       setShowSetting(true);
     }
   }, [showSetting]);
+
+  const handleShowSetting = useCallback((cancel) => {
+    if(cancel) {
+      setShowSetting(false);
+    }
+  }, []);
+
   return (
     <>
       <MenuBar>
@@ -72,7 +79,7 @@ const SideMenu = () => {
       </MenuBar>
       {
         showSetting 
-        ? <SettingMenu/>
+        ? <SettingMenu cancelHandler={handleShowSetting}/>
         : null
       }
     </>

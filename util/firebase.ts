@@ -4,6 +4,7 @@ import ReduxSagaFirebase from 'redux-saga-firebase';
 import '@firebase/firestore'
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.API_KEY,
@@ -21,8 +22,10 @@ if (firebase.apps.length === 0) {
   var reduxSagaFirebase = new ReduxSagaFirebase(myFirebaseApp);
   var googleProvider = new firebase.auth.GoogleAuthProvider();
   var githubProvider = new firebase.auth.GithubAuthProvider();
+  var authService = firebase.auth();
+  var storageService = firebase.storage();
   var dbService = firebase.firestore();
 }
 
-export { firebase, myFirebaseApp, reduxSagaFirebase, googleProvider, githubProvider, dbService };
+export { firebase, myFirebaseApp, authService, reduxSagaFirebase, storageService, googleProvider, githubProvider, dbService };
 

@@ -26,6 +26,9 @@ const initState = {
   addFriendDone: false,
   addFriendError: null,
   addedNewFriend: false,
+  editProfileLoading: false,
+  editProfileDone: false,
+  editProfileError: null,
 };
 
 export default initState;
