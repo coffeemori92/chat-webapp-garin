@@ -61,7 +61,11 @@ export const ButtonArea = styled.div`
     }
 `;
 
-export const ChatParagraph = styled.div`
+type OtherDataWrapperType = {
+  myChat: boolean
+}
+
+export const ChatParagraph = styled.div<OtherDataWrapperType>`
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
@@ -69,7 +73,7 @@ export const ChatParagraph = styled.div`
   margin-right: ${props => props.myChat ? '7px' : ''};
 `;
 
-export const ChatParagraphMainArea = styled.div`
+export const ChatParagraphMainArea = styled.div<OtherDataWrapperType>`
   display: flex;
   flex-flow: ${props => props.myChat ? 'row-reverse' : ''};
   width: 100%;
