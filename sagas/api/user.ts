@@ -78,8 +78,11 @@ export const registerUserAPI = async (data: any) => {
             friends: [],
           });
 };
-export const searchFriendAPI = (data: any) => {
-  return dbService.collection('users')
+export const searchFriendAPI = async (data: any) => {
+  if(myFirebaseApp.auth().currentUser?.email! === data.email) {
+    return false;
+  }
+  const result = await dbService.collection('users')
           .doc(data.email)
           .get().then(doc => {
             if(doc.exists) {
@@ -88,6 +91,7 @@ export const searchFriendAPI = (data: any) => {
               return false;
             }
           });
+  return result;
 };
 export const addFriendAPI = async (data: any) => {
   await dbService.collection('users')
