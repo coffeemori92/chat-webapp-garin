@@ -54,7 +54,7 @@ const Chat = () => {
         v.parentNode.style.backgroundColor = '';
       });
       if(clickedDiv) {
-        clickedDiv!.parentNode.style.backgroundColor = '#ECECED';
+        clickedDiv!.parentElement.style.backgroundColor = '#ECECED';
       }
     }
   }, []);
