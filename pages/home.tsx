@@ -63,9 +63,10 @@ const Home = () => {
   }, []);
 
   const onDoubleClick = useCallback((e) => {
-    console.log('page', e.target.id);
     const email = e.target.id;
-    dispatch({ type: SEARCH_CHATROOM_REQUEST, data: { email: email }})
+    if(email) {
+      dispatch({ type: SEARCH_CHATROOM_REQUEST, data: { email: email }})
+    }
   }, []);
 
   const onClicked = useCallback((e) => {

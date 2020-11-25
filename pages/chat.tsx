@@ -44,7 +44,6 @@ const Chat = () => {
   }, [me]);
 
   const onClicked = useCallback((e) => {
-    //console.log(e);
     const id = e.target.id;
     const className = e.target.className;
     if(chatDivEl.current) {
@@ -60,9 +59,10 @@ const Chat = () => {
   }, []);
 
   const onDoubleClick = useCallback((e) => {
-    //console.log('page', e.target.id);
     const chatRoomId = e.target.id;
-    dispatch({ type: SEARCH_CHATS_REQUEST, data: { chatRoomId: chatRoomId }})
+    if(chatRoomId) {
+      dispatch({ type: SEARCH_CHATS_REQUEST, data: { chatRoomId: chatRoomId }});
+    }
   }, []);
   
   return (
