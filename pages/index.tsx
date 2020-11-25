@@ -33,7 +33,7 @@ const Login = () => {
     if(me) {
       myFirebaseApp.auth().onAuthStateChanged(user => {
         if(user) {
-          router.replace('/home');
+          router.replace('/home'); 
         }
       });
     }
