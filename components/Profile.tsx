@@ -42,7 +42,7 @@ const Profile = ({ visible, cancelHandler }: Profile) => {
       const theFile = e.target.files[0];
       const reader = new FileReader();
       reader.onloadend = (e) => {
-        const result = e.currentTarget.result;
+        const result = e.target.result;
         setAttachmentImage(result);
       }
       reader.readAsDataURL(theFile);
