@@ -84,3 +84,17 @@ export const DarkBackground = styled.div`
   justify-content: center;
   background: rgba(0, 0, 0, 0.7);
 `;
+
+export const ImageArea = styled.div`
+  margin-bottom: 20px;
+  img {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+  }
+  svg {
+    position: absolute;
+    font-size: 30px;
+    cursor: pointer;
+  }
+`;

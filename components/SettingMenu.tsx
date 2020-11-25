@@ -37,8 +37,8 @@ const SettingMenu = ({ cancelHandler }: SettingMenu) => {
       setShowProfile(true);
     }
     if(e.target.id === "logout") {
-      setOnLogout(true);
       dispatch({ type: LOG_OUT_REQUEST });
+      setOnLogout(true);
     }
     if(e.target.id === 'exit') {
       dispatch({ type: LOG_OUT_REQUEST });

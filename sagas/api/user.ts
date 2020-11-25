@@ -4,20 +4,52 @@ import { v4 as uuidv4 } from 'uuid';
 export const signupAPI = async (data: any) => {
   await authService.createUserWithEmailAndPassword(data.email, data.password);
 }
-export const socialLoginAPI = (data: any) => reduxSagaFirebase.auth.signInWithPopup(data);
+export const socialLoginAPI = async (data: any) => {
+  const user = await authService.signInWithPopup(data).then(result => {
+    return result.user;
+  });
+  const usersEmail = [];
+  const usersUid = [];
+  await dbService.collection('users')
+        .get().then(snapshot => {
+          snapshot.forEach(doc => {
+            usersEmail.push(doc.id);
+            usersUid.push(doc.data().uid);
+          })
+        });
+  if(!usersEmail.includes(user.email) && 
+     !usersUid.includes(user.uid)) {
+    await dbService.collection('users')
+          .doc(user.email)
+          .set({
+            uid: user.uid,
+            nickname: user.displayName,
+            email: user.email,
+            shortMsg: '',
+            photoURL: user.photoURL,
+            friends: [],
+          });
+    return true;
+  } else if(usersEmail.includes(user.email) &&
+            usersUid.includes(user.uid)){
+    return true;
+  } else {
+    await authService.signOut();
+    return false;
+  }
+}
 export const loginAPI = (data: any) => reduxSagaFirebase.auth.signInWithEmailAndPassword(data.email, data.password);
 export const loadMyInfoAPI = async (data: any) => {
-  let me = {};
-  await dbService.collection('users')
+  const me = await dbService.collection('users')
           .doc(data.email)
           .get().then(doc => {
             if(doc.exists) {
-              me = doc.data();
+              return doc.data();
             }
           });
   return me;
 }
-export const logoutAPI = async () => await authService.signOut();
+export const logoutAPI = async () => await authService.signOut().then(() => { return });
 export const registerNicknameAPI = async (data: any) => {
   await myFirebaseApp.auth().currentUser.updateProfile({
     displayName: data.nickname
@@ -86,7 +118,6 @@ export const editProfileAPI = async (data: any) => {
                           .child(`${me.email!}/${uuidv4()}`);
     const response = await attachmetRef.putString(attachmentImage, 'data_url');
     const attachmentUrl = await response.ref.getDownloadURL();
-    console.log('attachmentUrl', attachmentUrl);
     const myChatRooms = [];
     let talks = [];
     await dbService.collection('chatrooms')
@@ -108,6 +139,7 @@ export const editProfileAPI = async (data: any) => {
       for(let j = 0; j < eachInfo.length; j++) {
         if(eachInfo[j].user === me.displayName) {
           eachInfo[j].user = data.nickname;
+          eachInfo[j].photoURL = attachmentUrl;
         }
       }
     }
@@ -137,7 +169,6 @@ export const editProfileAPI = async (data: any) => {
               friends.push([doc.data().email, doc.data().friends]);
             })
           });
-    console.log('friends', friends, friends.length);
     for(let i = 0; i < friends.length; i++) {
       const eachInfo = friends[i][1];
       for(let j = 0; j < eachInfo.length; j++) {

@@ -73,7 +73,7 @@ export const initChatsAPI = (data: any) => {
             talks: [],
           });
 };
-// TODO user 이미지 추가
+
 export const sendMessageAPI = (data: any) => {
   return dbService.collection('chats')
           .doc(data.talkId)
@@ -87,6 +87,7 @@ export const sendMessageAPI = (data: any) => {
                   content: data.text,
                   timestamp: Date.now(),
                   user: myFirebaseApp.auth().currentUser.displayName,
+                  photoURL: myFirebaseApp.auth().currentUser.photoURL,
                 }]
               }, { merge: true })
           })
@@ -108,6 +109,7 @@ export const getFriendEmailByChatrooms = (data: any) => {
             }
           });
 };
+// recentChat 수정해야함.
 export const searchMyChatRoomsAPI = (data: any) => {
   const myChatRooms = [];
   return dbService.collection('chatrooms')

@@ -29,7 +29,8 @@ const Home = () => {
           dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email }});
         }
       } else {
-        // 돌려보내기.
+        alert('先にログインしてください。');
+        router.replace('/');
       }
     })
   }, [me]);
@@ -135,6 +136,7 @@ const Home = () => {
         <FriendsContainer>
           <FriendsNumArea>友達 {
                 me &&
+                me.friends &&
                 me.friends.length
               }
           </FriendsNumArea>

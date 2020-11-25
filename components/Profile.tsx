@@ -1,25 +1,8 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { DarkBackground, Label, ProfileForm, ProfileLayout, StyledCloseIcon } from '../styles/ProfileStyle';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
-
-import styled from 'styled-components';
+import { DarkBackground, ImageArea, Label, ProfileForm, ProfileLayout, StyledCloseIcon } from '../styles/ProfileStyle';
 import { EDIT_PROFILE_REQUEST } from '../store/constants/user';
-
-export const ImageArea = styled.div`
-  margin-bottom: 20px;
-  img {
-    border-radius: 50%;
-    width: 200px;
-    height: 200px;
-  }
-  svg {
-    position: absolute;
-    font-size: 30px;
-    cursor: pointer;
-  }
-`;
 
 interface Profile {
   visible: boolean;
@@ -100,7 +83,7 @@ const Profile = ({ visible, cancelHandler }: Profile) => {
                 />
               {
                 !attachmentImage &&
-                <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+                <img src={me.photoURL} />
               }
               {
                 attachmentImage &&

@@ -6,6 +6,7 @@ import { INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID, INIT_SEARCH_CHATS_EXCEPT_CHATR
 import { ButtonArea, ChatArea, ChatBubble, ChatParagraph, ChatParagraphMainArea, ChatRoomContainer, Header, Label, TimeStampDiv, TypingArea } from '../../styles/ChatRoomStyle';
 import { LOAD_MY_INFO_REQUEST } from '../../store/constants/user';
 import { dbService, myFirebaseApp } from '../../util/firebase';
+import { useRouter } from 'next/router';
 
 const ChatRoom = () => {
   const [text, setText] = useState('');
@@ -13,6 +14,7 @@ const ChatRoom = () => {
   const chatBubble = useRef(null);
   const textareaEl = useRef(null);
   const formEl = useRef(null);
+  const router = useRouter();
   const { me } = useSelector((state: any) => state.user);
   const { searchChatRoomDone, talks, chatRoomId, talkWith, sendMessageDone, searchChatsDone, loadChatRoomDone } = useSelector((state: any) => state.chat);
   const dispatch = useDispatch();
@@ -44,6 +46,9 @@ const ChatRoom = () => {
       myFirebaseApp.auth().onAuthStateChanged(user => {
         if(user) {
           dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email }});
+        } else {
+          alert('先にログインしてください。');
+          router.replace('/');
         }
       });
     }
@@ -205,82 +210,3 @@ const ChatRoom = () => {
 };
 
 export default ChatRoom;
-
-// {/* { me && !newTalks &&
-//           talks.map((v, i) => {
-//             let myChat = false;
-//             const date = new Date(v.timestamp);
-//             const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
-//             jDate.splice(2, 0, ' ').join('');
-//             if(v.user === me.nickname) {
-//               myChat = true;
-//             }
-//             return (
-//               <>
-//                 <ChatParagraph key={v.timestamp} myChat={myChat}>
-//                   <ChatParagraphMainArea myChat={myChat}>
-//                     {
-//                       myChat 
-//                       ? null
-//                       : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
-//                     }
-//                     <div>
-//                       {
-//                         myChat
-//                         ? <ChatBubble>{v.content}</ChatBubble>
-//                         : (
-//                             <>
-//                               <Label>{v.user}</Label>
-//                               <ChatBubble>{v.content}</ChatBubble>
-//                             </>
-//                         )
-//                       }
-//                     </div>
-//                     <TimeStampDiv>{ jDate }</TimeStampDiv>
-//                   </ChatParagraphMainArea>
-//                 </ChatParagraph>
-//               </>
-//             )
-//           })
-//           }  */}
-
-// { me && newTalks &&
-//   newTalks.map((v, i) => {
-//     console.log(v);
-//     let myChat = false;
-//     const date = new Date(v.timestamp);
-//     const jDate = date.toLocaleTimeString('ja-JP', { hour12 :true, hour: '2-digit', minute:'2-digit' }).split('');
-//     jDate.splice(2, 0, ' ').join('');
-//     if(v.user === me.nickname) {
-//       myChat = true;
-//     }
-//     return (
-//       <>
-//         <ChatParagraph key={v.timestamp} myChat={myChat} ref={chatBubble}>
-//           <ChatParagraphMainArea myChat={myChat}>
-//             {
-//               myChat 
-//               ? null
-//               : <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
-//             }
-//             <div>
-//               {
-//                 myChat
-//                 ? <ChatBubble>{v.content}</ChatBubble>
-//                 : (
-//                     <>
-//                       <Label>{v.user}</Label>
-//                       <ChatBubble>{v.content}</ChatBubble>
-//                     </>
-//                 )
-//               }
-//             </div>
-//             <TimeStampDiv>
-//               { jDate }
-//             </TimeStampDiv>
-//           </ChatParagraphMainArea>
-//         </ChatParagraph>
-//       </>
-//     )
-//   })
-// }

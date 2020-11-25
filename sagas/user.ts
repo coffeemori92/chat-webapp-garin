@@ -20,8 +20,11 @@ function* signup(action: Action) {
 function* socialLogin(action: Action) {
   try {
     const result = yield call(socialLoginAPI, action.data);
-    console.log(result);
-    yield put({ type: SOCIAL_LOG_IN_SUCCESS });
+    if(result) {
+      yield put({ type: SOCIAL_LOG_IN_SUCCESS });
+    } else {
+      console.log('이미 아이디 존재')
+    }
   } catch(error) {
     console.error(error);
     yield put({ type: SOCIAL_LOG_IN_FAILURE, error: error.message });

@@ -9,7 +9,7 @@ import { LOAD_CHATROOMS_REQUEST, SEARCH_CHATS_REQUEST } from '../store/constants
 import { ChatArea, ChatContainer, ChatMainArea, Header, TimeStampArea, TimpStamp_AlertArea } from '../styles/ChatsStyle';
 
 const Chat = () => {
-  const { me, loadMyInfoDone, friends, } = useSelector((state: any) => state.user);
+  const { me, loadMyInfoDone } = useSelector((state: any) => state.user);
   const { recentChatRoomsInfo, chatRoomId, searchChatsDone } = useSelector((state: any) => state.chat);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -20,6 +20,9 @@ const Chat = () => {
       myFirebaseApp.auth().onAuthStateChanged(user => {
         if(user) {
           dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email }});
+        } else {
+          alert('先にログインしてください。');
+          router.replace('/');
         }
       });
     }
