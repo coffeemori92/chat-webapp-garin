@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import { INIT_CHATROOM_SEARCH_EXCEPT_CHATROOM_ID, INIT_SEARCH_CHATS_EXCEPT_CHATROOM_ID, LOAD_CHATROOMS_FAILURE, LOAD_CHATROOMS_REQUEST, LOAD_CHATROOMS_SUCCESS, LOAD_CHATROOM_FAILURE, LOAD_CHATROOM_REQUEST, LOAD_CHATROOM_SUCCESS, SEARCH_CHATROOM_FAILURE, SEARCH_CHATROOM_REQUEST, SEARCH_CHATROOM_SUCCESS, SEARCH_CHATS_FAILURE, SEARCH_CHATS_REQUEST, SEARCH_CHATS_SUCCESS, SEND_MESSAGE_FAILURE, SEND_MESSAGE_REQUEST, SEND_MESSAGE_SUCCESS } from '../constants/chat';
+import { LOG_OUT_SUCCESS } from '../constants/user';
 
 import initState from '../initState/chat';
 
@@ -96,6 +97,27 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
       draft.searchChatsLoading = false;
       draft.searchChatsDone = false;
       draft.searchChatsError = null;
+    case LOG_OUT_SUCCESS:
+      draft.chatRoomId = null;
+      draft.talkWith = null;
+      draft.talks = [];
+      draft.recentChatRoomsInfo = [];
+      draft.searchChatRoomLoading = false;
+      draft.searchChatRoomDone = false;
+      draft.searchChatRoomError = null;
+      draft.searchChatsLoading = false;
+      draft.searchChatsDone = false;
+      draft.searchChatsError = null;
+      draft.loadChatRoomLoading = false;
+      draft.loadChatRoomDone = false;
+      draft.loadChatRoomError = null;
+      draft.loadChatRoomsLoading = false;
+      draft.loadChatRoomsDone = false;
+      draft.loadChatRoomsError = null;
+      draft.sendMessageLoading = false;
+      draft.sendMessageDone = false;
+      draft.sendMessageError = null;
+      break;
     default:
       break;
   }

@@ -52,20 +52,6 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
       draft.loadMyInfoLoading = false;
       draft.loadMyInfoError = action.error;
       break;
-    case LOG_OUT_REQUEST:
-      draft.logoutLoading = true;
-      draft.logoutError = null;
-      draft.logoutDone = false;
-      break;
-    case LOG_OUT_SUCCESS:
-      draft.logoutLoading = false;
-      draft.logoutDone = true;
-      break;
-    case LOG_OUT_FAILURE:
-      draft.logoutLoading = false;
-      draft.logoutDone = false;
-      draft.logoutError = action.error;
-      break;
     case ADD_FRIEND_REQUEST:
       draft.addFriendLoading = true;
       draft.addFriendError = null;
@@ -96,6 +82,35 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
       draft.editProfileLoading = false;
       draft.editProfileDone = false;
       draft.editProfileError = action.error;
+      break;
+      case LOG_OUT_REQUEST:
+      draft.logoutLoading = true;
+      draft.logoutError = null;
+      break;
+    case LOG_OUT_SUCCESS:
+      draft.me = null;
+      draft.loginLoading = false;
+      draft.loginDone = false;
+      draft.loginError = null;
+      draft.loadMyInfoLoading = false;
+      draft.loadMyInfoDone = false;
+      draft.loadMyInfoError = null;
+      draft.logoutLoading = false;
+      draft.logoutError = null;
+      draft.signupLoading = false;
+      draft.signupDone = false;
+      draft.signupError = null;
+      draft.addFriendLoading = false;
+      draft.addFriendDone = false;
+      draft.addFriendError = null;
+      draft.addedNewFriend = false;
+      draft.editProfileLoading = false;
+      draft.editProfileDone = false;
+      draft.editProfileError = null;
+      break;
+    case LOG_OUT_FAILURE:
+      draft.logoutLoading = false;
+      draft.logoutError = action.error;
       break;
     case INIT_ADD_FRIEND_STATE:
       draft.addFriendLoading = false;

@@ -9,7 +9,7 @@ import { LOAD_CHATROOMS_REQUEST, SEARCH_CHATS_REQUEST } from '../store/constants
 import { ChatArea, ChatContainer, ChatMainArea, Header, TimeStampArea, TimpStamp_AlertArea } from '../styles/ChatsStyle';
 
 const Chat = () => {
-  const { me, loadMyInfoDone } = useSelector((state: any) => state.user);
+  const { me } = useSelector((state: any) => state.user);
   const { recentChatRoomsInfo, chatRoomId, searchChatsDone } = useSelector((state: any) => state.chat);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -38,10 +38,10 @@ const Chat = () => {
   }, [searchChatsDone]);
 
   useEffect(() => {
-    if(loadMyInfoDone) {
+    if(me) {
       dispatch({ type: LOAD_CHATROOMS_REQUEST, data: { email: me.email }});
     }
-  }, [loadMyInfoDone, me]);
+  }, [me]);
 
   const onClicked = useCallback((e) => {
     //console.log(e);
@@ -88,7 +88,7 @@ const Chat = () => {
                     >
                     <img src={v.photoURL}/>
                     <div>
-                      <div>{v.friendsNickname}</div>
+                      <div>{v.user}</div>
                       <div>{v.content}</div>
                     </div>
                   </ChatMainArea>

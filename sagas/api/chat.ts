@@ -109,7 +109,6 @@ export const getFriendEmailByChatrooms = (data: any) => {
             }
           });
 };
-// recentChat 수정해야함.
 export const searchMyChatRoomsAPI = (data: any) => {
   const myChatRooms = [];
   return dbService.collection('chatrooms')
