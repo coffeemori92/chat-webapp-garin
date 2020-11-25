@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
 import Signup from '../components/Signup';
-import { LOAD_MY_INFO_REQUEST, LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
+import { LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
 import { LoginLayout, LoginForm, Logo } from '../styles/LoginStyle';
 import { googleProvider, githubProvider, myFirebaseApp } from '../util/firebase';
 
@@ -14,8 +14,14 @@ const Login = () => {
   const inputEl = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const { loginDone } = useSelector((state: any) => state.user);
+  const { me, loginError } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(loginError) {
+      alert(loginError);
+    }
+  }, []);
 
   useEffect(() => {
     if(inputEl.current) {
@@ -24,14 +30,14 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if(loginDone) {
+    if(me) {
       myFirebaseApp.auth().onAuthStateChanged(user => {
         if(user) {
           router.replace('/home');
-        } 
+        }
       });
     }
-  }, [loginDone]);
+  }, [me]);
 
   const handleShowSignup = useCallback((cancel) => {
     if(cancel) {

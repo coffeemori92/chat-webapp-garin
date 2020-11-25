@@ -29,10 +29,16 @@ export const socialLoginAPI = async (data: any) => {
             photoURL: user.photoURL,
             friends: [],
           });
-    return true;
+    const result = await dbService.collection('users')
+                    .doc(user.email)
+                    .get().then((doc) => doc.data());
+    return result;
   } else if(usersEmail.includes(user.email) &&
             usersUid.includes(user.uid)){
-    return true;
+    const result = await dbService.collection('users')
+    .doc(user.email)
+    .get().then((doc) => doc.data());
+    return result;
   } else {
     await authService.signOut();
     return false;

@@ -30,6 +30,7 @@ const reducer = (state = initState, action: any) => produce(state, draft => {
     case SOCIAL_LOG_IN_SUCCESS:
       draft.loginLoading = false;
       draft.loginDone = true;
+      draft.me = action.data;
       break;
     case LOG_IN_FAILURE:
     case SOCIAL_LOG_IN_FAILURE:

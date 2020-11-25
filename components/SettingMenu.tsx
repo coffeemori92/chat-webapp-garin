@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { LOG_OUT_REQUEST } from '../store/constants/user';
 import { SettingBar } from '../styles/SettingMenuStyle';
@@ -37,12 +37,8 @@ const SettingMenu = ({ cancelHandler }: SettingMenu) => {
       setShowProfile(true);
     }
     if(e.target.id === "logout") {
-      dispatch({ type: LOG_OUT_REQUEST });
       setOnLogout(true);
-    }
-    if(e.target.id === 'exit') {
       dispatch({ type: LOG_OUT_REQUEST });
-      window.open('', '_self')!.close();
     }
   }, []);
 
@@ -51,7 +47,6 @@ const SettingMenu = ({ cancelHandler }: SettingMenu) => {
       <SettingBar>
         <li><a id="profile" onClick={onClick}>プロフィール</a></li>
         <li><a id="logout" onClick={onClick}>ログアウト</a></li>
-        <li><a id="exit" onClick={onClick}>終了</a></li>
       </SettingBar>
       <Profile visible={showProfile} cancelHandler={handleShowProfile} />
     </>

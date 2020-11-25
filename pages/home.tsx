@@ -23,16 +23,16 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    myFirebaseApp.auth().onAuthStateChanged(user => {
-      if(user) {
-        if(!me) {
+    if(!me) {
+      myFirebaseApp.auth().onAuthStateChanged(user => {
+        if(user) {
           dispatch({ type: LOAD_MY_INFO_REQUEST, data: { email: user.email }});
+        } else {
+          alert('先にログインしてください。');
+          router.replace('/');
         }
-      } else {
-        alert('先にログインしてください。');
-        router.replace('/');
-      }
-    })
+      });
+    }
   }, [me]);
 
   useEffect(() => {
@@ -43,20 +43,6 @@ const Home = () => {
       });
     }
   }, [searchChatRoomDone]);
-
-  // useEffect(() => {
-  //   if(addedNewFriend) {
-  //     dbService.collection('users')
-  //       .doc(me.email)
-  //       .onSnapshot((snapshot) => {
-  //         const user = snapshot.data();
-  //         console.log('users', user);
-  //         const myFriendsInfo = user!.friends;
-  //         setmyFriendsInfo(myFriendsInfo);
-  //       });
-  //   }
-  //   return () => setmyFriendsInfo(null);
-  // }, [addedNewFriend]);
   
   const handleShowSignup = useCallback((cancel) => {
     if(cancel) {

@@ -21,9 +21,9 @@ function* socialLogin(action: Action) {
   try {
     const result = yield call(socialLoginAPI, action.data);
     if(result) {
-      yield put({ type: SOCIAL_LOG_IN_SUCCESS });
+      yield put({ type: SOCIAL_LOG_IN_SUCCESS, data: result });
     } else {
-      console.log('이미 아이디 존재')
+      yield put({ type: SOCIAL_LOG_IN_FAILURE, error: '登録済みのユーザです。' });
     }
   } catch(error) {
     console.error(error);
@@ -33,11 +33,10 @@ function* socialLogin(action: Action) {
 
 function* login(action: Action) {
   try {
-    const result = yield call(loginAPI, action.data);
-    console.log(result);
-    yield put({ type: LOG_IN_SUCCESS });
+    yield call(loginAPI, action.data);
+    const result = yield call(loadMyInfoAPI, action.data);
+    yield put({ type: LOG_IN_SUCCESS, data: result });
   } catch(error) {
-    console.error(error);
     yield put({
       type: LOG_IN_FAILURE,
       error: error.message

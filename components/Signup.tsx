@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 import { DarkBackground, SignupForm, SignupLayout, Label, ErrorMsg, StyledCloseIcon } from '../styles/SignupStyle';
 import { SIGN_UP_REQUEST } from '../store/constants/user';
+import { sign } from 'crypto';
 
 interface Signup {
   visible: boolean;
@@ -22,8 +23,14 @@ const Signup = ({ visible, cancelHandler }: Signup) => {
   const inputEl = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
-  const { signupDone } = useSelector((state: any) => state.user);
+  const { signupDone, signupError } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(signupError) {
+      alert(signupError)
+    }
+  }, [signupError]);
 
   useEffect(() => {
     if(inputEl.current) {
