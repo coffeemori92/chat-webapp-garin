@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import Signup from '../components/Signup';
 import { LOG_IN_REQUEST, SOCIAL_LOG_IN_REQUEST } from '../store/constants/user';
-import { LoginLayout, LoginForm, Logo } from '../styles/LoginStyle';
+import { LoginLayout, LoginForm, Logo, TempButton, LoginButton } from '../styles/LoginStyle';
 import { googleProvider, githubProvider, myFirebaseApp } from '../util/firebase';
 
 const Login = () => {
@@ -104,11 +104,11 @@ const Login = () => {
           onChange={onChange}
           required
         />
-        <button>ログイン</button>
+        <LoginButton>ログイン</LoginButton>
       </LoginForm>
-      <button name="google" onClick={onSocialClick}>Googleアカウントで始める</button>
-      <button name="github" onClick={onSocialClick}>Githubアカウントで始める</button>
-      <button onClick={onClickSignup}>新規登録</button>
+      {/* <button name="google" onClick={onSocialClick}>Googleアカウントで始める</button>
+      <button name="github" onClick={onSocialClick}>Githubアカウントで始める</button> */}
+      <TempButton onClick={onClickSignup}>新規登録</TempButton>
       </LoginLayout>
       <Signup visible={showSignup} cancelHandler={handleShowSignup} />
     </>

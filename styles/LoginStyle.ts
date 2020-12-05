@@ -7,16 +7,20 @@ export const LoginLayout = styled.div`
   justify-content: center;
   height: 100vh;
   background-color: #E1B444;
-  button {
+`;
+
+export const LoginButton = styled.button`
       width: 250px;
       height: 35px;
       border: 0.5px solid gray;
-      border-bottom: none;
       outline-width: 1px;
-      &:nth-child(5) {
-        border-bottom: 0.5px solid gray;
-      }
-  }
+`;
+
+export const TempButton = styled.button`
+      width: 250px;
+      height: 35px;
+      border: 0.5px solid gray;
+      border-top: none;
 `;
 
 export const Logo = styled.div`
