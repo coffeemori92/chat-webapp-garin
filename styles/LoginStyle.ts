@@ -23,6 +23,8 @@ export const Logo = styled.div`
   margin-bottom: 42px;
   img {
     border-radius: 50%;
+    background-color: white;
+    padding: 30px;
   }
 `;
 

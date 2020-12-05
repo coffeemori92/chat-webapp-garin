@@ -84,7 +84,7 @@ const Login = () => {
     <>
       <LoginLayout>
       <Logo>
-        <img src="https://d2v9k5u4v94ulw.cloudfront.net/small_light(dw=200,dh=200,da=l,ds=s,cw=200,ch=200,cc=FFFFFF)/assets/images/3726945/original/f2c4f5ce-c69f-41d1-850f-0ddf76c82a9b?1556698179%27)/assets/images/372694" />
+        <img src="https://firebasestorage.googleapis.com/v0/b/chat-webapp-garin.appspot.com/o/default%2Fapple-icon-120x120.png?alt=media&token=7fa132d8-9f03-47f4-98c6-770084dc9659" />
       </Logo>
       <LoginForm onSubmit={onSubmitForm}>
         <input
